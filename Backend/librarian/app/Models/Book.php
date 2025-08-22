@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Book extends Model
 {
     use HasFactory;
-    protected $fillable = ['title', 'author', 'isbn', 'category', 'availability'];
+    protected $fillable = ['title', 'author', 'isbn', 'category', 'available'];
 
     public function borrowRequests()
     {
