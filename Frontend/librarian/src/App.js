@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Login from './Components/Auth/Login';
 import MainLayout from './Components/Layout/MainLayout';
+import "./App.css"
 
 const App = () => {
   const [currentUser, setCurrentUser] = useState(null);
