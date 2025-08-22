@@ -26,8 +26,13 @@ const Header = ({ currentUser, onLogout }) => {
               <div className="flex items-center">
                 <User className="h-5 w-5 text-gray-400 mr-2" />
                 <div className="text-right">
-                  <span className="text-sm font-medium text-gray-700 block">{currentUser.name}</span>
-                  <span className="text-xs text-gray-500 block">{currentUser.role}</span>
+                  {/* Use optional chaining and fallback text */}
+                  <span className="text-sm font-medium text-gray-700 block">
+                    {currentUser?.name || "Guest"}
+                  </span>
+                  <span className="text-xs text-gray-500 block">
+                    {currentUser?.role || "No Role"}
+                  </span>
                 </div>
               </div>
               
@@ -45,6 +50,11 @@ const Header = ({ currentUser, onLogout }) => {
       </div>
     </header>
   );
+};
+
+// Optional: set default props just in case
+Header.defaultProps = {
+  currentUser: { name: "Guest", role: "No Role" },
 };
 
 export default Header;
