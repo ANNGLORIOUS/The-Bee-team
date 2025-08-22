@@ -1,25 +1,22 @@
-import React, { useState, } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Header from '../Dashboard/Header';
 import Sidebar from '../Dashboard/SideBar';
 import PendingRequests from '../Dashboard/PendingRequests';
 import BorrowedBooks from '../Dashboard/BorrowedBooks';
 import ReturnHistory from '../Dashboard/ReturnHistory';
 import BookInventory from '../Dashboard/BookInventory';
-import { useApiState } from '../../hooks/useApi';
-import api from '../../services/api';
+import { useApiState } from '../../Hooks/UseApi';
+import api from '../../Services/api';
 
 const MainLayout = ({ currentUser, token, onLogout }) => {
   const [activeTab, setActiveTab] = useState('pending');
-  
+
   const booksState = useApiState([]);
   const requestsState = useApiState([]);
   const bookLogsState = useApiState([]);
 
-  useEffect(() => {
-    loadInitialData();
-  }, [token]);
-
-  const loadInitialData = async () => {
+  // ✅ Proper useCallback so eslint won't whine about deps
+  const loadInitialData = useCallback(async () => {
     try {
       await Promise.all([
         booksState.execute(api.getBooks, token),
@@ -29,7 +26,11 @@ const MainLayout = ({ currentUser, token, onLogout }) => {
     } catch (error) {
       console.error('Failed to load initial data:', error);
     }
-  };
+  }, [token, booksState, requestsState, bookLogsState]);
+
+  useEffect(() => {
+    loadInitialData();
+  }, [loadInitialData]);
 
   const refreshData = () => {
     loadInitialData();
@@ -80,19 +81,19 @@ const MainLayout = ({ currentUser, token, onLogout }) => {
   return (
     <div className="min-h-screen bg-gray-50">
       <Header currentUser={currentUser} onLogout={onLogout} />
-      
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <div className="flex">
-          <Sidebar 
-            activeTab={activeTab} 
+          <Sidebar
+            activeTab={activeTab}
             setActiveTab={setActiveTab}
             pendingCount={pendingRequests.length}
             borrowedCount={borrowedBooks.length}
             onLogout={onLogout}
           />
-          
+
           <div className="flex-1">
-             {activeTab === 'pending' && (
+            {activeTab === 'pending' && (
               <PendingRequests
                 requests={pendingRequests}
                 books={booksState.data || []}
@@ -101,28 +102,28 @@ const MainLayout = ({ currentUser, token, onLogout }) => {
                 loading={requestsState.loading}
               />
             )}
-            
+
             {activeTab === 'borrowed' && (
               <BorrowedBooks
                 books={borrowedBooks}
                 onReturn={handleBookReturn}
                 loading={bookLogsState.loading}
               />
-            )} 
-            
+            )}
+
             {activeTab === 'returns' && (
-              <ReturnHistory 
-                books={returnedBooks} 
+              <ReturnHistory
+                books={returnedBooks}
                 loading={bookLogsState.loading}
               />
-            )} 
-             
+            )}
+
             {activeTab === 'inventory' && (
-              <BookInventory 
-                books={booksState.data || []} 
+              <BookInventory
+                // books={booksState.data || []}
                 loading={booksState.loading}
-              /> 
-             )} 
+              />
+            )}
           </div>
         </div>
       </div>

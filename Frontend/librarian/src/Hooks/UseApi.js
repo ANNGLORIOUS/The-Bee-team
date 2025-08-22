@@ -1,48 +1,49 @@
-// import { useState, useEffect } from 'react';
-// import api from '../Services/api';
+import { useState } from 'react';
 
-// export const useApi = (token) => {
-//   const [data, setData] = useState(null);
-//   const [loading, setLoading] = useState(false);
-//   const [error, setError] = useState(null);
+// ✅ Removed unused `useEffect` and `api`
 
-//   const fetchData = async (apiCall, ...args) => {
-//     setLoading(true);
-//     setError(null);
-//     try {
-//       const result = await apiCall(token, ...args);
-//       setData(result);
-//       return result;
-//     } catch (err) {
-//       setError(err.message);
-//       throw err;
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
+export const useApi = (token) => {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-//   return { data, loading, error, fetchData };
-// };
+  const fetchData = async (apiCall, ...args) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const result = await apiCall(token, ...args);
+      setData(result);
+      return result;
+    } catch (err) {
+      setError(err.message);
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
 
-// export const useApiState = (initialData = null) => {
-//   const [data, setData] = useState(initialData);
-//   const [loading, setLoading] = useState(false);
-//   const [error, setError] = useState(null);
+  return { data, loading, error, fetchData };
+};
 
-//   const execute = async (apiCall, ...args) => {
-//     setLoading(true);
-//     setError(null);
-//     try {
-//       const result = await apiCall(...args);
-//       setData(result);
-//       return result;
-//     } catch (err) {
-//       setError(err.message);
-//       throw err;
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
+export const useApiState = (initialData = null) => {
+  const [data, setData] = useState(initialData);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-//   return { data, loading, error, execute, setData };
-// };
+  const execute = async (apiCall, ...args) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const result = await apiCall(...args);
+      setData(result);
+      return result;
+    } catch (err) {
+      setError(err.message);
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return { data, loading, error, execute, setData };
+};
